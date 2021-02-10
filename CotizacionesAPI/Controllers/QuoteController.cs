@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CotizacionesAPI.Models;
+using CotizacionesAPI.Services;
 
 namespace CotizacionesAPI.Controllers
 {
@@ -13,33 +12,33 @@ namespace CotizacionesAPI.Controllers
     [ApiController]
     public class QuoteController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly QuoteService _quoteService;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public QuoteController()
         {
-            _context = new DataContext();
+            _quoteService = new QuoteService();
         }
 
         // GET: api/Quote
         [HttpGet]
         public IEnumerable<QuoteModel> GetQuotes()
         {
-            return _context.Quotes;
+            return _quoteService.GetAll();
         }
 
         // GET: api/Quote/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetQuoteModel([FromRoute] string id)
+        public IActionResult GetQuoteModel([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var quoteModel = await _context.Quotes.FindAsync(id);
+            var quoteModel = _quoteService.GetOne(id);
 
             if (quoteModel == null)
             {
@@ -63,15 +62,13 @@ namespace CotizacionesAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(quoteModel).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var reult = _quoteService.PutOne(id, quoteModel);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!QuoteModelExists(id))
+                if (!_quoteService.Exists(id))
                 {
                     return NotFound();
                 }
@@ -93,36 +90,29 @@ namespace CotizacionesAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            _context.Quotes.Add(quoteModel);
-            await _context.SaveChangesAsync();
+            return Ok(_quoteService.PostOne(quoteModel));
 
-            return CreatedAtAction("GetQuoteModel", new { id = quoteModel.Id }, quoteModel);
+            //return CreatedAtAction("GetQuoteModel", new { id = quoteModel.Id }, quoteModel);
         }
 
         // DELETE: api/Quote/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteQuoteModel([FromRoute] string id)
+        public IActionResult DeleteQuoteModel([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var quoteModel = await _context.Quotes.FindAsync(id);
-            if (quoteModel == null)
+            if (!_quoteService.Exists(id))
             {
                 return NotFound();
             }
 
-            _context.Quotes.Remove(quoteModel);
-            await _context.SaveChangesAsync();
+            var result = _quoteService.DeleteOne(id);
 
-            return Ok(quoteModel);
+            return Ok(result);
         }
 
-        private bool QuoteModelExists(string id)
-        {
-            return _context.Quotes.Any(e => e.Id == id);
-        }
     }
 }
