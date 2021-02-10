@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CotizacionesAPI.Models;
@@ -26,23 +28,11 @@ namespace CotizacionesAPI.Controllers
         public IEnumerable<QuoteModel> GetQuotes()
         {
             return _context.Quotes;
-
-
-            //if (_context.Quotes.Any())
-            //{
-            //    List<QuoteModel> data = _context.Quotes.ToList();
-            //    return data;
-            //}
-            //else
-            //{
-            //    return null;
-            //}
-
         }
 
         // GET: api/Quote/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetQuoteModel([FromRoute] int id)
+        public async Task<IActionResult> GetQuoteModel([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {
@@ -61,7 +51,7 @@ namespace CotizacionesAPI.Controllers
 
         // PUT: api/Quote/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutQuoteModel([FromRoute] int id, [FromBody] QuoteModel quoteModel)
+        public async Task<IActionResult> PutQuoteModel([FromRoute] string id, [FromBody] QuoteModel quoteModel)
         {
             if (!ModelState.IsValid)
             {
@@ -111,7 +101,7 @@ namespace CotizacionesAPI.Controllers
 
         // DELETE: api/Quote/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteQuoteModel([FromRoute] int id)
+        public async Task<IActionResult> DeleteQuoteModel([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {
@@ -130,7 +120,7 @@ namespace CotizacionesAPI.Controllers
             return Ok(quoteModel);
         }
 
-        private bool QuoteModelExists(int id)
+        private bool QuoteModelExists(string id)
         {
             return _context.Quotes.Any(e => e.Id == id);
         }
