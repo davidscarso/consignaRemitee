@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using CotizacionesAPI.Models;
+using CotizacionesAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CotizacionesAPI.Controllers
@@ -12,9 +11,13 @@ namespace CotizacionesAPI.Controllers
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<List<QuoteModel>> Get()
         {
-            return new string[] { "value1", "value2" };
+            //return new string[] { "value1", "value2" };
+
+
+            return QuoteService.GetAll();
+
         }
 
         // GET api/values/5
