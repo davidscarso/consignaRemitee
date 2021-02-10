@@ -11,11 +11,14 @@ namespace CotizacionesAPI.Controllers
     [ApiController]
     public class QuoteController : ControllerBase
     {
-        private readonly DataContext _context = new DataContext();
+        private readonly DataContext _context;
 
-        public QuoteController(DataContext context)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public QuoteController()
         {
-            _context = context;
+            _context = new DataContext();
         }
 
         // GET: api/Quote
@@ -23,6 +26,18 @@ namespace CotizacionesAPI.Controllers
         public IEnumerable<QuoteModel> GetQuotes()
         {
             return _context.Quotes;
+
+
+            //if (_context.Quotes.Any())
+            //{
+            //    List<QuoteModel> data = _context.Quotes.ToList();
+            //    return data;
+            //}
+            //else
+            //{
+            //    return null;
+            //}
+
         }
 
         // GET: api/Quote/5
