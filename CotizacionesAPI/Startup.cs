@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CotizacionesAPI.ScheludeTask;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace CotizacionesAPI
 {
@@ -22,6 +24,11 @@ namespace CotizacionesAPI
             services.AddSwaggerGen();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            //services.AddControllers();
+            //services.AddSingleton<IHostedService, UpdateQuatesTask>();
+            services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, UpdateQuotesTask>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
