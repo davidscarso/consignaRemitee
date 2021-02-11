@@ -18,14 +18,15 @@ namespace CotizacionesAPI.Services
         private const string _urlAPI = _url + _endpoint + "?access_key=" + _access_key + "&format=1";
         
         private readonly DataContext _context;
-
+        private readonly QuoteService _quoteService;
+        
         /// <summary>
         /// Constructor
         /// </summary>
         public CurrencylayerService()
         {
             _context = new DataContext();
-
+            _quoteService = new QuoteService();
         }
 
 
@@ -70,16 +71,26 @@ namespace CotizacionesAPI.Services
                     Value = item.Value
                 };
 
-                if (!_context.Quotes.Any(e => e.Id == newQuote.Id))
+
+                if (!_quoteService.Exists(newQuote.Id))
                 {
-                    _context.Quotes.Add(newQuote);
-                    await _context.SaveChangesAsync();
+                    await _quoteService.PostOne(newQuote);
                 }
-                else
-                {
-                    _context.Entry(newQuote).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
+                else {
+                    await _quoteService.PutOne(newQuote.Id, newQuote);
                 }
+
+
+                //if (!_context.Quotes.Any(e => e.Id == newQuote.Id))
+                //{
+                //    _context.Quotes.Add(newQuote);
+                //    await _context.SaveChangesAsync();
+                //}
+                //else
+                //{
+                //    _context.Entry(newQuote).State = EntityState.Modified;
+                //    await _context.SaveChangesAsync();
+                //}
             }
 
             return currencylayer.Quotes.Count;

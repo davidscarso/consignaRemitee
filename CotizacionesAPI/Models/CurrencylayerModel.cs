@@ -15,7 +15,7 @@ namespace CotizacionesAPI.Models
         public string Privacy { get; set; }
         public string Timestamp { get; set; }
         public string Source { get; set; }
-        public Dictionary<string, decimal> Quotes { get; set; }
+        public Dictionary<string, double> Quotes { get; set; }
     }
 
 }

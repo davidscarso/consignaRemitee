@@ -114,5 +114,59 @@ namespace CotizacionesAPI.Controllers
             return Ok(result);
         }
 
+        #region CALCULATIOMS
+
+        /// <summary>
+        /// Calcular el monto X a enviar en moneda M para que llegue el monto Y en moneda N.
+        /// </summary>
+        /// <param name="sourse">ej USD</param>
+        /// <param name="valuein">ej 100.10</param>
+        /// <param name="money">ARS</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("calculation/{sourse}/from/{valuein}/{money}")]
+        public IActionResult GetQuoteCalculationX(string sourse, double valuein, string money)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _quoteService.CalculationX(sourse, valuein, money);
+
+            if (result == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+        /// <summary>
+        /// Calcular el monto Y a recibir en moneda N enviando el monto X en moneda M.
+        /// </summary>
+        /// <param name="sourse"></param>
+        /// <param name="valuein"></param>
+        /// <param name="money"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("calculation/{sourse}/{valuein}/to/{money}")]
+        public IActionResult GetQuoteCalculationY(string sourse, double valuein, string money)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = _quoteService.CalculationY(sourse, valuein, money);
+
+            if (result == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        #endregion
     }
 }

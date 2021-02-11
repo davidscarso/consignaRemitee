@@ -18,6 +18,6 @@ namespace CotizacionesAPI.Models
         /// <summary>
         /// Valor de la cotizacion. de la forma USD-> demas monedas
         /// </summary>
-        public decimal Value { get; set; }
+        public double Value { get; set; }
     }
 }
