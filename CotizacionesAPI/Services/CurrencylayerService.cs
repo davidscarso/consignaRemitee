@@ -1,14 +1,11 @@
 ﻿using CotizacionesAPI.Models;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace CotizacionesAPI.Services
 {
-    public class CurrencylayerService
+    public class CurrencylayerService : ICurrencylayerService
     {
         // set endpoint and your access key
         private const string _endpoint = "live";
@@ -16,10 +13,10 @@ namespace CotizacionesAPI.Services
         private const string _url = "http://api.currencylayer.com/";
 
         private const string _urlAPI = _url + _endpoint + "?access_key=" + _access_key + "&format=1";
-        
+
         private readonly DataContext _context;
         private readonly QuoteService _quoteService;
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -36,7 +33,6 @@ namespace CotizacionesAPI.Services
         /// <returns>Currencylayer</returns>
         public async Task<CurrencylayerModel> GetQuotes()
         {
-
             using (var httpClient = new HttpClient())
             {
                 CurrencylayerModel currencylayer = new CurrencylayerModel();
@@ -76,7 +72,8 @@ namespace CotizacionesAPI.Services
                 {
                     await _quoteService.PostOne(newQuote);
                 }
-                else {
+                else
+                {
                     await _quoteService.PutOne(newQuote.Id, newQuote);
                 }
 

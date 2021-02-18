@@ -1,4 +1,5 @@
 ﻿using CotizacionesAPI.ScheludeTask;
+using CotizacionesAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,7 @@ namespace CotizacionesAPI
             //services.AddSingleton<IHostedService, UpdateQuatesTask>();
             services.AddSingleton<Microsoft.Extensions.Hosting.IHostedService, UpdateQuotesTask>();
 
+            IoC.AddDependency(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
