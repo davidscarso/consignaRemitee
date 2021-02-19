@@ -12,21 +12,21 @@ namespace CotizacionesAPI.Controllers
     [ApiController]
     public class QuoteController : ControllerBase
     {
-        private readonly QuoteService _quoteService;
+        private readonly IQuoteService _quoteService;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public QuoteController()
+        public QuoteController(IQuoteService quoteService)
         {
-            _quoteService = new QuoteService();
+            _quoteService = quoteService;
         }
 
         // GET: api/Quote
         [HttpGet]
-        public IEnumerable<QuoteModel> GetQuotes()
+        public async Task<IEnumerable<QuoteModel>> GetQuotes()
         {
-            return _quoteService.GetAll();
+            return await _quoteService.GetAll();
         }
 
         // GET: api/Quote/5
@@ -50,7 +50,7 @@ namespace CotizacionesAPI.Controllers
 
         // PUT: api/Quote/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutQuoteModel([FromRoute] string id, [FromBody] QuoteModel quoteModel)
+        public IActionResult PutQuoteModel([FromRoute] string id, [FromBody] QuoteModel quoteModel)
         {
             if (!ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace CotizacionesAPI.Controllers
                 return BadRequest(ModelState);
             }
 
-            return Ok(_quoteService.PostOne(quoteModel));
+            return Ok(await _quoteService.PostOne(quoteModel));
 
             //return CreatedAtAction("GetQuoteModel", new { id = quoteModel.Id }, quoteModel);
         }

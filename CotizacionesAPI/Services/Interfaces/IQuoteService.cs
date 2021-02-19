@@ -1,11 +1,25 @@
-﻿using System;
+﻿using CotizacionesAPI.Models;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CotizacionesAPI.Services
 {
-    public class IQuoteService
+    public interface IQuoteService
     {
+        Task<IEnumerable<QuoteModel>> GetAll();
+
+        Task<QuoteModel> GetOne(string id);
+
+        Task<QuoteModel> PutOne(string id, QuoteModel quoteModel);
+
+        Task<QuoteModel> PostOne(QuoteModel quoteModel);
+
+        Task<int> DeleteOne(string id);
+
+        bool Exists(string id);
+
+        double CalculationX(string m, double y, string n);
+
+        double CalculationY(string m, double x, string n);
     }
 }

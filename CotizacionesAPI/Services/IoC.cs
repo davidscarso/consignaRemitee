@@ -10,9 +10,11 @@ namespace CotizacionesAPI.Services
     {
         public static IServiceCollection AddDependency(this IServiceCollection services)
         {
-            // Inyectar el servicio
+            // Inyectar los servicios
             services.AddTransient<ICurrencylayerService, CurrencylayerService>();
 
+            services.AddTransient<IQuoteService, QuoteService>();
+            
             return services;
         }
     }

@@ -8,19 +8,23 @@ namespace CotizacionesAPI.ScheludeTask
 {
     public class UpdateQuotesTask : ScheduledProcessor
     {
-        public UpdateQuotesTask(IServiceScopeFactory serviceScopeFactory) : base(serviceScopeFactory)
+        private readonly ICurrencylayerService _currencylayerService;
+
+        protected override string Schedule => "*/1 * * * *"; // every 10 min 
+
+
+        public UpdateQuotesTask(ICurrencylayerService currencylayerService, IServiceScopeFactory serviceScopeFactory) : base(serviceScopeFactory)
         {
+            _currencylayerService = currencylayerService;
 
         }
 
-        protected override string Schedule => "*/10 * * * *"; // every 10 min 
 
         public override async Task ProcessInScopeAsync(IServiceProvider scopeServiceProvider)
         {
             //Console.WriteLine("Update Task!!! : " + DateTime.Now.ToString());
 
-            CurrencylayerService dd = new CurrencylayerService();
-            await dd.UpdateQuotesToBaseAsync();
+            await _currencylayerService.UpdateQuotesToBaseAsync();
 
             //return Task.CompletedTask;
         }

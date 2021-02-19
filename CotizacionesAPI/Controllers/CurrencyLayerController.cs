@@ -11,20 +11,17 @@ namespace CotizacionesAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class CurrencyLayerController : ControllerBase
-    {
-
-        private readonly DataContext _context;
-        private readonly CurrencylayerService _currencylayerServiceService;
+    {        
+        private readonly ICurrencylayerService _currencylayerServiceService;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        public CurrencyLayerController()
-        {
-            _context = new DataContext();
-            _currencylayerServiceService = new CurrencylayerService();
+        public CurrencyLayerController(ICurrencylayerService currencylayerService)
+        {     
+            _currencylayerServiceService = currencylayerService;
         }
-        
+
         // GET: api/CurrencyLayer
         /// <summary>
         /// Return a Currencylayer with all Quotes
@@ -33,7 +30,7 @@ namespace CotizacionesAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var result  = await _currencylayerServiceService.GetQuotes();
+            var result = await _currencylayerServiceService.GetQuotes();
 
             return Ok(result);
         }

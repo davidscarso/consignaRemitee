@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CotizacionesAPI.Services
 {
-    public class QuoteService
+    public class QuoteService : IQuoteService
     {
         private readonly DataContext _context;
 
@@ -17,55 +17,96 @@ namespace CotizacionesAPI.Services
         private const double _fee = 1.5; // << set % of FEE
         private const string _sourse = "USD";
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
         public QuoteService()
         {
             _context = new DataContext();
         }
 
 
-        public IEnumerable<QuoteModel> GetAll()
+        public async Task<IEnumerable<QuoteModel>> GetAll()
         {
-            return _context.Quotes;
+            var result = new List<QuoteModel>();
+            try
+            {
+                result = await _context.Quotes.ToListAsync();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
         }
 
 
         public async Task<QuoteModel> GetOne(string id)
         {
-            return await _context.Quotes.FindAsync(id);
+            var result = new QuoteModel();
+            try
+            {
+                result = await _context.Quotes.FindAsync(id);
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            return result;
         }
 
 
-        public async Task<int> PutOne(string id, QuoteModel quoteModel)
+        public async Task<QuoteModel> PutOne(string id, QuoteModel quoteModel)
         {
-            _context.Entry(quoteModel).State = EntityState.Modified;
 
-            return await _context.SaveChangesAsync();
+            try
+            {
+                var result = _context.Entry(quoteModel);
+                result.State = EntityState.Modified;
+                return result.Entity;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
         }
 
 
         public async Task<QuoteModel> PostOne(QuoteModel quoteModel)
         {
-            _context.Quotes.Add(quoteModel);
+            try
+            {
+                _context.Quotes.Add(quoteModel);
 
-            await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
 
-            return await GetOne(quoteModel.Id);
+                return await GetOne(quoteModel.Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 
         public async Task<int> DeleteOne(string id)
         {
-            var quoteModel = await _context.Quotes.FindAsync(id);
-            if (quoteModel != null)
+            try
             {
-                _context.Quotes.Remove(quoteModel);
-                return await _context.SaveChangesAsync();
-
+                var quoteModel = await _context.Quotes.FindAsync(id);
+                if (quoteModel != null)
+                {
+                    _context.Quotes.Remove(quoteModel);
+                    return await _context.SaveChangesAsync();
+                }
+                return 0;
             }
-            return 0;
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 
@@ -91,25 +132,32 @@ namespace CotizacionesAPI.Services
         /// <returns></returns>
         public double CalculationX(string m, double y, string n)
         {
-            var feeValues = (_fee / 100);
-
-            var idM = _sourse + m.ToUpper();
-            var idN = _sourse + n.ToUpper();
-
-            var quoteM = GetOne(idM).Result; //USD-BOB 6.913913
-            var quoteN = GetOne(idN).Result; //USD-ARS 88.50
-
             double result = 0;
-
-            if (quoteM != null && quoteN != null)
+            try
             {
-                var yUSD = y / quoteN.Value;
+                var feeValues = (_fee / 100);
 
-                var xN = yUSD * quoteM.Value;
+                var idM = _sourse + m.ToUpper();
+                var idN = _sourse + n.ToUpper();
 
-                var xNF = xN + (xN * feeValues);
+                var quoteM = GetOne(idM).Result; //USD-BOB 6.913913
+                var quoteN = GetOne(idN).Result; //USD-ARS 88.50
 
-                result = xNF;
+
+                if (quoteM != null && quoteN != null)
+                {
+                    var yUSD = y / quoteN.Value;
+
+                    var xN = yUSD * quoteM.Value;
+
+                    var xNF = xN + (xN * feeValues);
+
+                    result = xNF;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
             return result;
@@ -124,29 +172,40 @@ namespace CotizacionesAPI.Services
         /// <returns></returns>
         public double CalculationY(string m, double x, string n)
         {
-            var feeValues = (_fee / 100);
-
-            var idM = _sourse + m.ToUpper();
-            var idN = _sourse + n.ToUpper();
-
-            var quoteM = GetOne(idM).Result;
-            var quoteN = GetOne(idN).Result;
-
             double result = 0;
-
-            if (quoteM != null && quoteN != null)
+            try
             {
-                x = x - (x * feeValues); //descuento el fee sobre el monto enviado  10.000 - 10.000*feeValues
+                var feeValues = (_fee / 100);
 
-                var xUSD = x / quoteM.Value; //convierto a USD
+                var idM = _sourse + m.ToUpper();
+                var idN = _sourse + n.ToUpper();
 
-                var yN = xUSD * quoteN.Value;  //convierto a moneda N
+                var quoteM = GetOne(idM).Result;
+                var quoteN = GetOne(idN).Result;
 
-                result = yN;
+                if (quoteM != null && quoteN != null)
+                {
+                    x = x - (x * feeValues); //descuento el fee sobre el monto enviado  10.000 - 10.000*feeValues
+
+                    var xUSD = x / quoteM.Value; //convierto a USD
+
+                    var yN = xUSD * quoteN.Value;  //convierto a moneda N
+
+                    result = yN;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
             return result;
         }
+
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
 
     }
 }
