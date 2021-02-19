@@ -10,7 +10,7 @@ namespace CotizacionesAPI.ScheludeTask
     {
         private readonly ICurrencylayerService _currencylayerService;
 
-        protected override string Schedule => "*/1 * * * *"; // every 10 min 
+        protected override string Schedule => "*/10 * * * *"; // every 10 min 
 
 
         public UpdateQuotesTask(ICurrencylayerService currencylayerService, IServiceScopeFactory serviceScopeFactory) : base(serviceScopeFactory)
