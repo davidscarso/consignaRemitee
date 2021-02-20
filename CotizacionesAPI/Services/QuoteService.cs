@@ -1,4 +1,5 @@
 ﻿using CotizacionesAPI.Models;
+using CotizacionesAPI.Services.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -57,20 +58,21 @@ namespace CotizacionesAPI.Services
         }
 
 
-        public async Task<QuoteModel> PutOne(string id, QuoteModel quoteModel)
+        public async Task<int> PutOne(string id, QuoteModel quoteModel)
         {
-
             try
             {
-                var result = _context.Entry(quoteModel);
-                result.State = EntityState.Modified;
-                return result.Entity;
+                _context.Entry(quoteModel).State = EntityState.Modified;
+
+                return await _context.SaveChangesAsync();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                // Por aca pasara la excepcion DbUpdateConcurrencyException:
+                // Database operation expected to affect 1 row(s) but actually affected 0 row(s). Data may have been modified or deleted since entities were loaded. See http://go.microsoft.com/fwlink/?LinkId=527962 for information on understanding and handling optimistic concurrency exceptions.
+
                 throw;
             }
-
         }
 
 
@@ -201,11 +203,5 @@ namespace CotizacionesAPI.Services
 
             return result;
         }
-
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-
     }
 }

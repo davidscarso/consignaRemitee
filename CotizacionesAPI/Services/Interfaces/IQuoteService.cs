@@ -10,7 +10,7 @@ namespace CotizacionesAPI.Services
 
         Task<QuoteModel> GetOne(string id);
 
-        Task<QuoteModel> PutOne(string id, QuoteModel quoteModel);
+        Task<int> PutOne(string id, QuoteModel quoteModel);
 
         Task<QuoteModel> PostOne(QuoteModel quoteModel);
 

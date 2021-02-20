@@ -1,10 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using CotizacionesAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace CotizacionesAPI.Services
+namespace CotizacionesAPI.Middleware
 {
     public static class IoC
     {
@@ -14,7 +11,7 @@ namespace CotizacionesAPI.Services
             services.AddTransient<ICurrencylayerService, CurrencylayerService>();
 
             services.AddTransient<IQuoteService, QuoteService>();
-            
+
             return services;
         }
     }

@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CotizacionesAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace CotizacionesAPI.Models
+namespace CotizacionesAPI.Services.Data
 {
     public class DataContext : DbContext
     {
@@ -11,7 +12,7 @@ namespace CotizacionesAPI.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(connectionString: "Filename=./QuotesDB.sqlite");
+            optionsBuilder.UseSqlite(connectionString: "Filename=./Services/Data/QuotesDB.sqlite");
         }
 
         public DbSet<QuoteModel> Quotes { get; set; }

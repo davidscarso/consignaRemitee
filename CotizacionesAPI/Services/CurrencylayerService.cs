@@ -1,4 +1,5 @@
 ﻿using CotizacionesAPI.Models;
+using CotizacionesAPI.Services.Data;
 using Newtonsoft.Json;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -22,8 +23,8 @@ namespace CotizacionesAPI.Services
         /// </summary>
         public CurrencylayerService(IQuoteService quoteService)
         {
-            _context = new DataContext();
             _quoteService = quoteService;
+            _context = new DataContext();
         }
 
         /// <summary>
@@ -54,8 +55,6 @@ namespace CotizacionesAPI.Services
         /// <returns>number of Quotes</returns>
         public async Task<int> UpdateQuotesToBaseAsync()
         {
-
-            QuoteService quateService = new QuoteService();
             CurrencylayerModel currencylayer = await GetQuotes();
 
             foreach (var item in currencylayer.Quotes)

@@ -1,5 +1,5 @@
-﻿using CotizacionesAPI.ScheludeTask;
-using CotizacionesAPI.Services;
+﻿using CotizacionesAPI.Middleware;
+using CotizacionesAPI.ScheludeTask;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;

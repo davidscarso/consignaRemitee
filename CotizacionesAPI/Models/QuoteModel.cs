@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace CotizacionesAPI.Models
 {
+    /// <summary>
+    /// Quote Model    
+    /// </summary>
     public class QuoteModel
     {
         /// <summary>
@@ -14,10 +14,13 @@ namespace CotizacionesAPI.Models
         /// "USDBOB"
         /// </summary>
         public string Id { get; set; }
-        
+
         /// <summary>
-        /// Valor de la cotizacion. de la forma USD-> demas monedas
+        /// Valor de la cotizacion. 
+        /// De la forma USD-> demas monedas
+        ///  es ConcurrencyCheck con lo que verificariamos que no se modifique en varias concurrencias en la base de datos.
         /// </summary>
+        [ConcurrencyCheck]
         public double Value { get; set; }
     }
 }
